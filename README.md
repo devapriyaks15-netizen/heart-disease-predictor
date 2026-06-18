@@ -4,17 +4,11 @@ A machine learning web application that predicts cardiovascular disease risk usi
 
 ---
 
-## 🚀 Live Demo
-
-> Run locally using the steps below.
-
----
-
 ## 📸 Screenshots
 
-| Home | Risk Assessment |
-|------|----------------|
-| ![Home](screenshots/home.png) | ![Risk](screenshots/risk.png) |
+| Home | Models | Risk Assessment |
+|------|--------|----------------|
+| ![Home](screenshots/home.png) | ![Models](screenshots/models.png) | ![Risk](screenshots/risk.png) |
 
 ---
 
@@ -55,7 +49,7 @@ We trained and compared **4 machine learning models** on **253,680 patient recor
 | Data Processing | Apache PySpark |
 | ML Training | PySpark MLlib |
 | Backend | Python, Flask |
-| Frontend | HTML, CSS (custom rose theme) |
+| Frontend | HTML, CSS |
 | Dataset | CDC BRFSS 2015 |
 
 ---
@@ -64,18 +58,22 @@ We trained and compared **4 machine learning models** on **253,680 patient recor
 
 ```
 HeartRisk/
-├── app.py                  # Flask backend & prediction logic
+├── app.py                       # Flask backend & prediction logic
 ├── templates/
-│   ├── base.html           # Shared navbar & footer
-│   ├── home.html           # Landing page
-│   ├── models.html         # Model comparison page
-│   └── risk.html           # Risk assessment form
+│   ├── base.html                # Shared navbar & footer
+│   ├── home.html                # Landing page
+│   ├── models.html              # Model comparison page
+│   └── risk.html                # Risk assessment form
 ├── static/
 │   └── css/
-│       └── style.css       # Rose theme stylesheet
+│       └── style.css            # Rose theme stylesheet
+├── screenshots/
+│   ├── home.png
+│   ├── models.png
+│   └── risk.png
 └── models/
-    ├── lr_model.pkl        # Trained Logistic Regression model
-    ├── results_df.pkl      # Model comparison results
+    ├── lr_model.pkl             # Trained Logistic Regression model
+    ├── results_df.pkl           # Model comparison results
     └── feature_importances.pkl  # Feature importance scores
 ```
 
@@ -119,15 +117,14 @@ http://127.0.0.1:5000
 | Name | GitHub |
 |------|--------|
 | Deva Priya K S | [@devapriyaks15-netizen](https://github.com/devapriyaks15-netizen) |
-| Duvur Mokshitha Aishwarya | — |
+| Duvur Mokshitha Aishwarya | [@mokshithaaish](https://github.com/mokshithaaish) |
 
 ---
 
 ## 🏫 Academic Context
 
 - **Institution:** REVA University, Bengaluru
-- **Course:** Big Data Analytics (B22EJS605)
-- **Semester:** VI — B.Tech Computer Science & Information Technology
+- **Department:** B.Tech Computer Science & Information Technology
 
 ---
 
