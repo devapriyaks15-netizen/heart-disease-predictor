@@ -4,6 +4,16 @@ A machine learning web application that predicts cardiovascular disease risk usi
 
 ---
 
+## 🚀 Live Demo
+
+👉 **[Try HeartRisk Live](https://heart-disease-predictor-lggx.onrender.com)**
+
+> Note: First load may take 30–50 seconds as the free server wakes up.
+
+You can also run it locally on your system — see the **How to Run Locally** section below.
+
+---
+
 ## 📸 Screenshots
 
 | Home | Models | Risk Assessment |
@@ -50,6 +60,7 @@ We trained and compared **4 machine learning models** on **253,680 patient recor
 | ML Training | PySpark MLlib |
 | Backend | Python, Flask |
 | Frontend | HTML, CSS |
+| Deployment | Render |
 | Dataset | CDC BRFSS 2015 |
 
 ---
@@ -59,6 +70,7 @@ We trained and compared **4 machine learning models** on **253,680 patient recor
 ```
 HeartRisk/
 ├── app.py                       # Flask backend & prediction logic
+├── requirements.txt             # Python dependencies
 ├── templates/
 │   ├── base.html                # Shared navbar & footer
 │   ├── home.html                # Landing page
@@ -89,7 +101,7 @@ cd heart-disease-predictor
 
 **2. Install dependencies**
 ```bash
-pip install flask numpy
+pip install -r requirements.txt
 ```
 
 **3. Run the app**
