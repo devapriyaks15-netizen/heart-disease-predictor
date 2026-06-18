@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Risk Assessment{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <p class="page-eyebrow">Logistic Regression · PySpark ML</p>
+    <h1 class="page-title">Heart Disease Risk Assessment</h1>
+    <p class="page-sub">Answer 8 questions about your health. Our model will calculate your cardiovascular risk score.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="risk-layout">
+
+      <!-- FORM -->
+      <div class="risk-form-wrap">
+        <div class="form-card">
+
+          <div class="form-section">
+            <h3 class="form-section-title">👤 Demographics</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Age Group</label>
+                <select id="age" class="form-select">
+                  <option value="1">18 – 24</option>
+                  <option value="2">25 – 34</option>
+                  <option value="3">35 – 44</option>
+                  <option value="4" selected>45 – 54</option>
+                  <option value="5">55 – 64</option>
+                  <option value="6">65 – 74</option>
+                  <option value="7">75+</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Sex</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" data-field="sex" data-val="0">Female</button>
+                  <button class="toggle-btn" data-field="sex" data-val="1">Male</button>
+                </div>
+                <input type="hidden" id="sex" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">🩺 Clinical Indicators</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>High Blood Pressure?</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" data-field="high_bp" data-val="0">No</button>
+                  <button class="toggle-btn" data-field="high_bp" data-val="1">Yes</button>
+                </div>
+                <input type="hidden" id="high_bp" value="0">
+              </div>
+              <div class="form-group">
+                <label>High Cholesterol?</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" data-field="high_chol" data-val="0">No</button>
+                  <button class="toggle-btn" data-field="high_chol" data-val="1">Yes</button>
+                </div>
+                <input type="hidden" id="high_chol" value="0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>BMI — <span id="bmi-val">25.0</span> <span id="bmi-cat" class="bmi-tag">Overweight</span></label>
+              <input type="range" id="bmi" min="10" max="70" step="0.5" value="25" class="slider" oninput="updateBMI(this.value)">
+              <div class="slider-labels"><span>10</span><span>70</span></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">🌿 Lifestyle & Health</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Do you smoke?</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" data-field="smoker" data-val="0">No</button>
+                  <button class="toggle-btn" data-field="smoker" data-val="1">Yes</button>
+                </div>
+                <input type="hidden" id="smoker" value="0">
+              </div>
+              <div class="form-group">
+                <label>Diabetes?</label>
+                <select id="diabetes" class="form-select">
+                  <option value="0">No</option>
+                  <option value="1">Pre-diabetes</option>
+                  <option value="2">Yes</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>General Health</label>
+              <div class="health-slider-wrap">
+                <input type="range" id="gen_hlth" min="1" max="5" step="1" value="3" class="slider" oninput="updateHealth(this.value)">
+                <div class="health-labels">
+                  <span>Excellent</span><span>Very Good</span><span>Good</span><span>Fair</span><span>Poor</span>
+                </div>
+              </div>
+              <div class="health-tag-wrap"><span id="health-tag" class="health-tag good">Good</span></div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-full" onclick="runAssessment()">
+            ⚡ Assess My Heart Disease Risk
+          </button>
+
+        </div>
+      </div>
+
+      <!-- RESULT PANEL -->
+      <div class="result-panel" id="result-panel">
+        <div class="result-placeholder">
+          <div class="placeholder-icon">🫀</div>
+          <p>Your risk assessment result will appear here after you submit.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const healthLabels = {1:'Excellent', 2:'Very Good', 3:'Good', 4:'Fair', 5:'Poor'};
+  const healthClasses = {1:'excellent', 2:'very-good', 3:'good', 4:'fair', 5:'poor'};
+
+  function updateBMI(val) {
+    document.getElementById('bmi-val').textContent = parseFloat(val).toFixed(1);
+    const cat = val >= 30 ? 'Obese' : val >= 25 ? 'Overweight' : 'Normal';
+    const tag = document.getElementById('bmi-cat');
+    tag.textContent = cat;
+    tag.className = 'bmi-tag ' + cat.toLowerCase();
+  }
+
+  function updateHealth(val) {
+    const tag = document.getElementById('health-tag');
+    tag.textContent = healthLabels[val];
+    tag.className = 'health-tag ' + healthClasses[val];
+  }
+
+  // Toggle buttons
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const field = btn.dataset.field;
+      document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(field).value = btn.dataset.val;
+    });
+  });
+
+  async function runAssessment() {
+    const panel = document.getElementById('result-panel');
+    panel.innerHTML = `<div class="result-loading"><div class="spinner"></div><p>Analysing your risk profile…</p></div>`;
+
+    const payload = {
+      age:       document.getElementById('age').value,
+      sex:       document.getElementById('sex').value,
+      high_bp:   document.getElementById('high_bp').value,
+      high_chol: document.getElementById('high_chol').value,
+      bmi:       document.getElementById('bmi').value,
+      smoker:    document.getElementById('smoker').value,
+      diabetes:  document.getElementById('diabetes').value,
+      gen_hlth:  document.getElementById('gen_hlth').value,
+    };
+
+    const res  = await fetch('/predict', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify(payload),
+    });
+    const data = await res.json();
+    renderResult(data, payload);
+  }
+
+  function renderResult(data, payload) {
+    const panel = document.getElementById('result-panel');
+    const levelMap = {
+      high:     { label: 'HIGH RISK',     icon: '⚠️',  cls: 'high'     },
+      moderate: { label: 'MODERATE RISK', icon: '⚡',  cls: 'moderate' },
+      low:      { label: 'LOW RISK ✓',    icon: '✅',  cls: 'low'      },
+    };
+    const lvl = levelMap[data.level];
+    const bmi = parseFloat(payload.bmi);
+    const bmiCat = bmi >= 30 ? 'Obese' : bmi >= 25 ? 'Overweight' : 'Normal';
+    const ageLabels = {1:'18-24',2:'25-34',3:'35-44',4:'45-54',5:'55-64',6:'65-74',7:'75+'};
+
+    const recsHtml = data.recs.map(r => `<li>${lvl.icon} ${r}</li>`).join('');
+    const meterPct = Math.min(data.risk_score, 100);
+
+    panel.innerHTML = `
+      <div class="result-card ${lvl.cls}">
+        <div class="result-header">
+          <span class="result-level">${lvl.label}</span>
+          <span class="result-score">${data.risk_score}% risk</span>
+        </div>
+
+        <div class="risk-meter-wrap">
+          <div class="risk-meter">
+            <div class="risk-fill" style="width:${meterPct}%"></div>
+          </div>
+          <span class="risk-meter-pct">${data.risk_score}%</span>
+        </div>
+
+        <div class="summary-chips">
+          <div class="chip">
+            <span class="chip-lbl">Age</span>
+            <span class="chip-val">${ageLabels[payload.age]}</span>
+          </div>
+          <div class="chip">
+            <span class="chip-lbl">BMI</span>
+            <span class="chip-val">${bmi.toFixed(1)} (${bmiCat})</span>
+          </div>
+          <div class="chip">
+            <span class="chip-lbl">Risk Factors</span>
+            <span class="chip-val">${data.risk_factors} / 7</span>
+          </div>
+        </div>
+
+        <div class="recs-section">
+          <h4>Recommendations</h4>
+          <ul class="recs-list">${recsHtml}</ul>
+        </div>
+
+        <p class="disclaimer">⚕️ For educational purposes only. Always consult a qualified doctor.</p>
+      </div>
+    `;
+  }
+</script>
+{% endblock %}

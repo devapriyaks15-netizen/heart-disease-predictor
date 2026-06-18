@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Model Results{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <p class="page-eyebrow">PySpark MLlib · Apache Spark</p>
+    <h1 class="page-title">Model Performance</h1>
+    <p class="page-sub">Four machine learning models trained and evaluated on the CDC BRFSS 2015 dataset. 70% train / 30% test split.</p>
+  </div>
+</section>
+
+<!-- BEST MODEL HIGHLIGHT -->
+<section class="section">
+  <div class="container">
+    <div class="best-model-card">
+      <div class="best-badge">🏆 Best Model</div>
+      <h2 class="best-name">{{ best.name }}</h2>
+      <div class="best-metrics">
+        <div class="best-metric">
+          <span class="best-val">{{ best.accuracy }}%</span>
+          <span class="best-lbl">Accuracy</span>
+        </div>
+        <div class="best-metric">
+          <span class="best-val">{{ best.auc }}</span>
+          <span class="best-lbl">AUC-ROC</span>
+        </div>
+        <div class="best-metric">
+          <span class="best-val">{{ best.f1 }}%</span>
+          <span class="best-lbl">F1-Score</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="section section-tinted">
+  <div class="container">
+    <h2 class="section-title">Full Comparison</h2>
+    <div class="table-wrap">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-Score</th>
+            <th>AUC-ROC</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in models %}
+          <tr {% if m.Model == best.name %}class="best-row"{% endif %}>
+            <td class="model-name-cell">
+              {% if m.Model == best.name %}<span class="trophy">🏆</span>{% endif %}
+              {{ m.Model }}
+            </td>
+            <td><span class="metric-pill">{{ m.Accuracy }}%</span></td>
+            <td>{{ m.Precision }}%</td>
+            <td>{{ m.Recall }}%</td>
+            <td>{{ m['F1-Score'] }}%</td>
+            <td>
+              <div class="auc-wrap">
+                <div class="auc-bar" style="width:{{ (m['AUC-ROC'] * 100)|round }}%"></div>
+                <span>{{ m['AUC-ROC'] }}</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DATASET INFO -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Dataset & Methodology</h2>
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-icon">📦</div>
+        <h3>Dataset</h3>
+        <p>CDC Behavioral Risk Factor Surveillance System (BRFSS) 2015 — one of the largest health surveys in the US.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">⚙️</div>
+        <h3>Processing</h3>
+        <p>Data processed using Apache PySpark for distributed computing across 253,680 records with 21 health features.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🎯</div>
+        <h3>Training</h3>
+        <p>Models trained with a 70/30 train-test split using PySpark MLlib pipelines with feature scaling and cross-validation.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📈</div>
+        <h3>Evaluation</h3>
+        <p>Models evaluated on Accuracy, Precision, Recall, F1-Score, and AUC-ROC to ensure robust performance measurement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Big Data Analytics · PySpark ML</p>
+      <h1 class="hero-title">Heart Disease<br><span class="accent">Risk Prediction</span></h1>
+      <p class="hero-sub">
+        Trained on <strong>{{ stats.total_records }}</strong> real patient records from the CDC BRFSS dataset,
+        HeartRisk uses machine learning to assess your cardiovascular risk in seconds.
+      </p>
+      <div class="hero-actions">
+        <a href="/risk" class="btn btn-primary">Check Your Risk →</a>
+        <a href="/models" class="btn btn-outline">View Model Results</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="ecg-card">
+        <div class="ecg-label">LIVE CARDIAC MONITOR</div>
+        <svg class="ecg-svg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+          <polyline class="ecg-line" points="
+            0,60 40,60 55,60 60,20 65,80 70,40 75,60
+            115,60 130,60 135,20 140,80 145,40 150,60
+            190,60 205,60 210,20 215,80 220,40 225,60
+            265,60 280,60 285,20 290,80 295,40 300,60
+            340,60 355,60 360,20 365,80 370,40 375,60 400,60
+          "/>
+        </svg>
+        <div class="ecg-stats">
+          <div class="ecg-stat">
+            <span class="ecg-val">{{ stats.best_accuracy }}%</span>
+            <span class="ecg-lbl">Best Accuracy</span>
+          </div>
+          <div class="ecg-divider"></div>
+          <div class="ecg-stat">
+            <span class="ecg-val">{{ stats.features }}</span>
+            <span class="ecg-lbl">Health Indicators</span>
+          </div>
+          <div class="ecg-divider"></div>
+          <div class="ecg-stat">
+            <span class="ecg-val">4</span>
+            <span class="ecg-lbl">ML Models</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="stats-strip">
+  <div class="container">
+    <div class="stat-item">
+      <span class="stat-num">{{ stats.total_records }}</span>
+      <span class="stat-lbl">Patient Records</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">{{ stats.features }}</span>
+      <span class="stat-lbl">Health Features</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">{{ stats.best_accuracy }}%</span>
+      <span class="stat-lbl">Model Accuracy</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">CDC</span>
+      <span class="stat-lbl">BRFSS Dataset</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Three steps from input to insight</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon">📋</div>
+        <h3>Enter Health Info</h3>
+        <p>Answer 8 simple questions about your age, BMI, blood pressure, and lifestyle habits.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-icon">🤖</div>
+        <h3>ML Analysis</h3>
+        <p>Our Logistic Regression model — trained on 253K CDC records — calculates your risk score.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-card">
+        <div class="step-icon">📊</div>
+        <h3>Get Your Result</h3>
+        <p>Receive a Low, Moderate, or High risk classification with personalized health recommendations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP FEATURES -->
+<section class="section section-tinted">
+  <div class="container">
+    <h2 class="section-title">Key Risk Factors</h2>
+    <p class="section-sub">Top predictors identified by the Random Forest model</p>
+    <div class="features-list">
+      {% for name, importance in top_features %}
+      <div class="feature-row">
+        <span class="feature-name">{{ name }}</span>
+        <div class="feature-bar-wrap">
+          <div class="feature-bar" style="width: {{ [importance * 3, 100] | min }}%"></div>
+        </div>
+        <span class="feature-pct">{{ importance }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta-section">
+  <div class="container cta-inner">
+    <h2>Ready to check your heart health?</h2>
+    <p>Takes less than a minute. No account needed.</p>
+    <a href="/risk" class="btn btn-primary btn-lg">Start Risk Assessment →</a>
+  </div>
+</section>
+
+{% endblock %}
