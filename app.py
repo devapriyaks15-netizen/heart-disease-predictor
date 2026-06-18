@@ -21,8 +21,31 @@ scaler_mean     = lr_data['scaler_mean']
 scaler_std      = lr_data['scaler_std']
 
 # Top features for home page stats
-feature_names = feature_columns
-fi_pairs = sorted(zip(feature_names, feature_importances), key=lambda x: x[1], reverse=True)
+feature_names = {
+    'HighBP': 'High Blood Pressure',
+    'HighChol': 'High Cholesterol',
+    'CholCheck': 'Cholesterol Check',
+    'BMI': 'BMI',
+    'Smoker': 'Smoker',
+    'Stroke': 'Stroke',
+    'Diabetes': 'Diabetes',
+    'PhysActivity': 'Physical Activity',
+    'Fruits': 'Fruits Intake',
+    'Veggies': 'Veggie Intake',
+    'HvyAlcoholConsump': 'Heavy Alcohol Use',
+    'AnyHealthcare': 'Has Healthcare',
+    'NoDocbcCost': 'No Doctor (Cost)',
+    'GenHlth': 'General Health',
+    'MentHlth': 'Mental Health',
+    'PhysHlth': 'Physical Health',
+    'DiffWalk': 'Difficulty Walking',
+    'Sex': 'Sex',
+    'Age': 'Age',
+    'Education': 'Education',
+    'Income': 'Income',
+}
+
+fi_pairs = sorted(zip(feature_names.values(), feature_importances), key=lambda x: x[1], reverse=True)
 top_features = [(name, round(float(val)*100, 1)) for name, val in fi_pairs[:5]]
 
 # Best model
